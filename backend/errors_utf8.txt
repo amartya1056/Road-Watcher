@@ -1,0 +1,2 @@
+﻿src/lib/liveData.ts(71,9): error TS2322: Type 'unknown' is not assignable to type 'any[]'.
+src/routes/anthropic/index.ts(134,54): error TS7030: Not all code paths return a value.

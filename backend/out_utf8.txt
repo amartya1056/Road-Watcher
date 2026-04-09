@@ -1,0 +1,48 @@
+﻿node.exe : 
+C:\Users\AMARTYA NAYAN\D
+ownloads\Road-Watcher (2
+)\Road-Watcher\backend\s
+rc\db\index.ts:8
+At C:\Program 
+Files\nodejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified: 
+(C:\    
+Users\AMARTY...c\db\in  
+  dex.ts:8:String) [], 
+R    emoteException
+    + 
+FullyQualifiedErrorI    
+d : NativeCommandError
+ 
+  throw new Error(
+        ^
+
+
+Error: DATABASE_URL 
+must be set. Did you 
+forget to provision a 
+database?
+    at <anonymous> 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+src\db\index.ts:8:9)
+    at ModuleJob.run (no
+de:internal/modules/esm/
+module_job:271:25)
+    at async onImport.tr
+acePromise.__proto__ (no
+de:internal/modules/esm/
+loader:578:26)
+    at async asyncRunEnt
+ryPointWithESMLoader (no
+de:internal/modules/run_
+main:116:5)
+
+Node.js v22.14.0

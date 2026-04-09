@@ -1,0 +1,747 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Cyberpunk Pothole Detection & Routing System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: potholes
+    description: Pothole detection and management
+  - name: routing
+    description: Route planning and pothole avoidance
+  - name: stats
+    description: Dashboard statistics and summaries
+  - name: anthropic
+    description: Anthropic AI chat operations
+  - name: complaints
+    description: Pothole complaint and reporting operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /potholes:
+    get:
+      operationId: listPotholes
+      tags: [potholes]
+      summary: List all potholes
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [Low, Medium, High, Critical]
+        - name: dateRange
+          in: query
+          schema:
+            type: string
+            enum: [24h, week, month, all]
+        - name: lat
+          in: query
+          schema:
+            type: number
+        - name: lon
+          in: query
+          schema:
+            type: number
+        - name: radius
+          in: query
+          description: Radius in meters
+          schema:
+            type: number
+        - name: is_fixed
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: List of potholes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pothole"
+    post:
+      operationId: createPothole
+      tags: [potholes]
+      summary: Report a new pothole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePotholeBody"
+      responses:
+        "201":
+          description: Pothole created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pothole"
+
+  /potholes/{id}:
+    get:
+      operationId: getPothole
+      tags: [potholes]
+      summary: Get a specific pothole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pothole details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pothole"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updatePothole
+      tags: [potholes]
+      summary: Update pothole (mark as fixed, add votes)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePotholeBody"
+      responses:
+        "200":
+          description: Updated pothole
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pothole"
+
+  /potholes/{id}/vote:
+    post:
+      operationId: votePothole
+      tags: [potholes]
+      summary: Confirm/vote on a pothole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Vote recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pothole"
+
+  /stats/summary:
+    get:
+      operationId: getStatsSummary
+      tags: [stats]
+      summary: Get dashboard summary statistics
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsSummary"
+
+  /stats/heatmap:
+    get:
+      operationId: getHeatmapData
+      tags: [stats]
+      summary: Get pothole heatmap data points
+      parameters:
+        - name: dateRange
+          in: query
+          schema:
+            type: string
+            enum: [24h, week, month, all]
+      responses:
+        "200":
+          description: Heatmap data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HeatmapPoint"
+
+  /stats/driver-score:
+    get:
+      operationId: getDriverScore
+      tags: [stats]
+      summary: Get driver gamification score
+      responses:
+        "200":
+          description: Driver score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DriverScore"
+
+  /route/pothole-aware:
+    post:
+      operationId: getPotholeAwareRoute
+      tags: [routing]
+      summary: Get route with pothole warnings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RouteRequestBody"
+      responses:
+        "200":
+          description: Route with pothole data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RouteResponse"
+
+  /anthropic/conversations:
+    get:
+      operationId: listAnthropicConversations
+      tags: [anthropic]
+      summary: List all conversations
+      responses:
+        "200":
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnthropicConversation"
+    post:
+      operationId: createAnthropicConversation
+      tags: [anthropic]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAnthropicConversationBody"
+      responses:
+        "201":
+          description: Created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicConversation"
+  /anthropic/conversations/{id}:
+    get:
+      operationId: getAnthropicConversation
+      tags: [anthropic]
+      summary: Get conversation with messages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicConversationWithMessages"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicError"
+    delete:
+      operationId: deleteAnthropicConversation
+      tags: [anthropic]
+      summary: Delete a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicError"
+  /anthropic/conversations/{id}/messages:
+    get:
+      operationId: listAnthropicMessages
+      tags: [anthropic]
+      summary: List messages in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnthropicMessage"
+    post:
+      operationId: sendAnthropicMessage
+      tags: [anthropic]
+      summary: Send a message (SSE stream)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendAnthropicMessageBody"
+      responses:
+        "200":
+          description: SSE stream
+          content:
+            text/event-stream: {}
+  /potholes/{id}/complaints:
+    get:
+      operationId: listComplaints
+      tags: [complaints]
+      summary: List complaints for a pothole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Complaint"
+    post:
+      operationId: createComplaint
+      tags: [complaints]
+      summary: File a complaint for a pothole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateComplaintBody"
+      responses:
+        "201":
+          description: Created complaint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Pothole:
+      type: object
+      properties:
+        id:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+        severity:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        depth_cm:
+          type: number
+        width_cm:
+          type: number
+        volume_m3:
+          type: number
+        estimated_repair_cost_usd:
+          type: number
+        image_base64:
+          type: string
+          nullable: true
+        is_fixed:
+          type: boolean
+        votes:
+          type: integer
+        confidence:
+          type: number
+        timestamp:
+          type: string
+        address:
+          type: string
+          nullable: true
+      required:
+        - id
+        - lat
+        - lon
+        - severity
+        - depth_cm
+        - width_cm
+        - volume_m3
+        - estimated_repair_cost_usd
+        - is_fixed
+        - votes
+        - confidence
+        - timestamp
+
+    CreatePotholeBody:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        severity:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        depth_cm:
+          type: number
+        width_cm:
+          type: number
+        volume_m3:
+          type: number
+        estimated_repair_cost_usd:
+          type: number
+        image_base64:
+          type: string
+          nullable: true
+        confidence:
+          type: number
+        address:
+          type: string
+          nullable: true
+      required:
+        - lat
+        - lon
+        - severity
+        - depth_cm
+        - width_cm
+        - volume_m3
+        - estimated_repair_cost_usd
+        - confidence
+
+    UpdatePotholeBody:
+      type: object
+      properties:
+        is_fixed:
+          type: boolean
+        severity:
+          type: string
+          enum: [Low, Medium, High, Critical]
+      required: []
+
+    StatsSummary:
+      type: object
+      properties:
+        total_potholes:
+          type: integer
+        total_fixed:
+          type: integer
+        high_severity:
+          type: integer
+        total_repair_cost_usd:
+          type: number
+        total_volume_m3:
+          type: number
+        total_asphalt_tons:
+          type: number
+        potholes_24h:
+          type: integer
+        avg_depth_cm:
+          type: number
+        city_savings_usd:
+          type: number
+      required:
+        - total_potholes
+        - total_fixed
+        - high_severity
+        - total_repair_cost_usd
+        - total_volume_m3
+        - total_asphalt_tons
+        - potholes_24h
+        - avg_depth_cm
+        - city_savings_usd
+
+    HeatmapPoint:
+      type: object
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+        weight:
+          type: number
+      required:
+        - lat
+        - lon
+        - weight
+
+    DriverScore:
+      type: object
+      properties:
+        score:
+          type: integer
+        level:
+          type: string
+        potholes_reported:
+          type: integer
+        confirmations_received:
+          type: integer
+        city_savings_usd:
+          type: number
+        badge:
+          type: string
+        next_level_threshold:
+          type: integer
+      required:
+        - score
+        - level
+        - potholes_reported
+        - confirmations_received
+        - city_savings_usd
+        - badge
+        - next_level_threshold
+
+    RouteRequestBody:
+      type: object
+      properties:
+        start_lat:
+          type: number
+        start_lon:
+          type: number
+        end_lat:
+          type: number
+        end_lon:
+          type: number
+      required:
+        - start_lat
+        - start_lon
+        - end_lat
+        - end_lon
+
+    RouteResponse:
+      type: object
+      properties:
+        geometry:
+          type: object
+          description: GeoJSON geometry
+        distance_m:
+          type: number
+        duration_s:
+          type: number
+        pothole_warnings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Pothole"
+        has_danger:
+          type: boolean
+        total_repair_cost_on_route:
+          type: number
+      required:
+        - geometry
+        - distance_m
+        - duration_s
+        - pothole_warnings
+        - has_danger
+        - total_repair_cost_on_route
+
+    AnthropicConversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - createdAt
+    AnthropicMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - conversationId
+        - role
+        - content
+        - createdAt
+    CreateAnthropicConversationBody:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+    SendAnthropicMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+    AnthropicConversationWithMessages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnthropicMessage"
+      required:
+        - id
+        - title
+        - createdAt
+        - messages
+    AnthropicError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    Complaint:
+      type: object
+      properties:
+        id:
+          type: string
+        pothole_id:
+          type: string
+        type:
+          type: string
+        road_type:
+          type: string
+        authority:
+          type: string
+        description:
+          type: string
+        contact_name:
+          type: string
+          nullable: true
+        contact_email:
+          type: string
+          nullable: true
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - pothole_id
+        - type
+        - road_type
+        - authority
+        - description
+        - status
+        - created_at
+    CreateComplaintBody:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [complaint, report]
+        road_type:
+          type: string
+          enum: [NH, SH, MDR, "City Road", "Rural Road", Unknown]
+        authority:
+          type: string
+        description:
+          type: string
+        contact_name:
+          type: string
+        contact_email:
+          type: string
+      required:
+        - type
+        - road_type
+        - authority
+        - description

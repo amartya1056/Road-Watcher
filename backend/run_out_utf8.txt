@@ -1,0 +1,129 @@
+﻿Γùç injected env (4) from ..\.env // tip: Γîÿ custom filepath { path: '/custom/path/.env' }
+node.exe : [seed] 
+Failed to seed 
+potholes: 
+DrizzleQueryError: 
+Failed query: SELECT 
+COUNT(*) as count FROM 
+potholes
+At C:\Program 
+Files\nodejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified: 
+([se    ed] Failed 
+t...t FROM     
+potholes:String) [], R  
+  emoteException
+    + 
+FullyQualifiedErrorI    
+d : NativeCommandError
+ 
+params: 
+    at NodePgPreparedQue
+ry.queryWithCache 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+node_modules\src\pg-core
+\session.ts:73:11)
+    at process.processTi
+cksAndRejections (node:i
+nternal/process/task_que
+ues:105:5)
+    at async 
+seedIfEmpty 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+src\lib\seed.ts:39:25)
+    at async startup 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+src\index.ts:15:3) {
+  query: 'SELECT 
+COUNT(*) as count FROM 
+potholes',
+  params: [],
+  cause: Error: SASL: SC
+RAM-SERVER-FIRST-MESSAGE
+: client password must 
+be a string
+      at 
+C:\Users\AMARTYA NAYAN\D
+ownloads\Road-Watcher (2
+)\Road-Watcher\backend\n
+ode_modules\pg-pool\inde
+x.js:45:11
+      at process.process
+TicksAndRejections (node
+:internal/process/task_q
+ueues:105:5)
+      at async 
+<anonymous> 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+node_modules\src\node-po
+stgres\session.ts:149:14
+)
+      at async NodePgPre
+paredQuery.queryWithCach
+e (C:\Users\AMARTYA NAYA
+N\Downloads\Road-Watcher
+ (2)\Road-Watcher\backen
+d\node_modules\src\pg-co
+re\session.ts:71:12)
+      at async 
+seedIfEmpty 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+src\lib\seed.ts:39:25)
+      at async startup 
+(C:\Users\AMARTYA NAYAN\
+Downloads\Road-Watcher (
+2)\Road-Watcher\backend\
+src\index.ts:15:3)
+}
+[liveData] Starting syncΓÇª
+[15:29:36.632] [32mINFO[39m (14940): [36mServer listening[39m
+    [35mport[39m: 5000
+[liveData] Chicago 311: 500 records
+[liveData] TomTom: 864 incidents across 6 cities
+[15:29:41.857] [33mWARN[39m (14940): [36mInitial live data sync failed (non-fatal)[39m
+    err: {
+      "type": "DrizzleQueryError",
+      "message": "Failed query: SELECT id FROM potholes\nparams: : SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string",
+      "stack":
+          Error: Failed query: SELECT id FROM potholes
+          params: 
+              at NodePgPreparedQuery.queryWithCache (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\node_modules\src\pg-core\session.ts:73:11)
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async getExistingIds (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\src\lib\liveData.ts:201:16)
+              at async syncLiveData (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\src\lib\liveData.ts:242:23)
+          caused by: Error: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+              at C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\node_modules\pg-pool\index.js:45:11
+              at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+              at async <anonymous> (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\node_modules\src\node-postgres\session.ts:149:14)
+              at async NodePgPreparedQuery.queryWithCache (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\node_modules\src\pg-core\session.ts:71:12)
+              at async getExistingIds (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\src\lib\liveData.ts:201:16)
+              at async syncLiveData (C:\Users\AMARTYA NAYAN\Downloads\Road-Watcher (2)\Road-Watcher\backend\src\lib\liveData.ts:242:23)
+      "query": "SELECT id FROM potholes",
+      "params": []
+    }
+[15:29:56.486] [32mINFO[39m (14940): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10

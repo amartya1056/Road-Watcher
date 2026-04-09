@@ -1,0 +1,44 @@
+{
+  "name": "Roadview — Pothole Intelligence",
+  "short_name": "Roadview",
+  "description": "Real-time pothole detection, analytics, and road damage intelligence powered by satellite data.",
+  "start_url": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
+  "background_color": "#080b14",
+  "theme_color": "#7c3aed",
+  "categories": ["navigation", "utilities", "maps"],
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/maskable-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Command Center",
+      "url": "./",
+      "description": "View live pothole map"
+    },
+    {
+      "name": "Analytics",
+      "url": "./dashboard",
+      "description": "View global analytics"
+    },
+    {
+      "name": "Pothole Log",
+      "url": "./potholes",
+      "description": "Browse pothole registry"
+    }
+  ]
+}
