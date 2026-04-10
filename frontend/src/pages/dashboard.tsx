@@ -245,118 +245,119 @@ export default function Dashboard() {
 
       {/* Regional Breakdown */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <div className="rounded-2xl p-6" style={{ background: "var(--surface-1)", border: "1px solid var(--border-card)", boxShadow: "var(--shadow-card)" }}>
-          <div className="flex items-center justify-between mb-6">
+        <div className="rounded-2xl p-5 md:p-6" style={{ background: "var(--surface-1)", border: "1px solid var(--border-card)", boxShadow: "var(--shadow-card)" }}>
+          {/* Title top-left + tabs row */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div className="flex items-center gap-2">
               <Globe size={15} style={{ color: "var(--violet-fg)" }} />
               <span className="text-sm font-semibold text-foreground">Regional Breakdown</span>
             </div>
-            
-            <Tabs defaultValue="Asia" className="w-auto">
-              <TabsList className="bg-transparent border-0 gap-2">
-                {["Asia", "Africa", "Americas", "Europe", "Oceania"].map(r => (
-                  <TabsTrigger key={r} value={r} className="rounded-full text-[10px] px-4 data-[state=active]:bg-violet-600 data-[state=active]:text-white">
-                    {r}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+          </div>
 
+          <Tabs defaultValue="Asia" className="w-full">
+            <TabsList className="bg-transparent border-0 gap-1 sm:gap-2 flex-wrap justify-start mb-6">
               {["Asia", "Africa", "Americas", "Europe", "Oceania"].map(r => (
-                <TabsContent key={r} value={r} className="mt-6">
-                  {dashboardStats?.regional_stats?.[r] ? (
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                      {/* Regional Summary */}
-                      <div className="md:col-span-4 space-y-6">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center bg-violet-600/20 text-violet-400">
-                             <span className="font-bold text-lg">{r[0]}</span>
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-foreground">{r}</h3>
-                            <p className="text-[10px] text-muted-foreground">{dashboardStats?.regional_stats?.[r]?.city_count ?? 0} cities tracked</p>
-                          </div>
-                        </div>
+                <TabsTrigger key={r} value={r} className="rounded-full text-[10px] px-3 sm:px-4 data-[state=active]:bg-violet-600 data-[state=active]:text-white">
+                  {r}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="rounded-xl p-4 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
-                            <p className="text-3xl font-black text-orange-400">{fmt(dashboardStats?.regional_stats?.[r]?.total_cost ?? 0)}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Total Cost</p>
-                          </div>
-                          <div className="rounded-xl p-4 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
-                            <p className="text-3xl font-black text-violet-400">{dashboardStats?.regional_stats?.[r]?.avg_severity ?? 0} / 4</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Avg Severity</p>
-                          </div>
-                          <div className="rounded-xl p-4 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
-                            <p className="text-3xl font-black text-red-400">{dashboardStats?.regional_stats?.[r]?.critical_count ?? 0}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold text-red-400/80">Critical</p>
-                          </div>
-                          <div className="rounded-xl p-4 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
-                            <p className="text-3xl font-black text-orange-400">{dashboardStats?.regional_stats?.[r]?.high_count ?? 0}</p>
-                            <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold text-orange-400/80">High</p>
-                          </div>
+            {["Asia", "Africa", "Americas", "Europe", "Oceania"].map(r => (
+              <TabsContent key={r} value={r} className="mt-0">
+                {dashboardStats?.regional_stats?.[r] ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+                    {/* Box 1: Regional Summary */}
+                    <div className="rounded-xl p-5 space-y-5 bg-black/[0.02] dark:bg-[#0d1025]/60 border border-black/5 dark:border-white/[0.06]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-violet-600/20 text-violet-400 shrink-0">
+                           <span className="font-bold text-lg">{r[0]}</span>
                         </div>
-
-                        <div className="space-y-3">
-                          {(dashboardStats?.regional_stats?.[r]?.severity_distribution || []).map((d: any) => (
-                            <div key={d.label} className="space-y-1">
-                              <div className="flex justify-between text-[10px] font-bold">
-                                <span className="text-muted-foreground">{d.label}</span>
-                                <span className="text-foreground">{d.percentage}%</span>
-                              </div>
-                              <div className="h-1.5 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
-                                <div className="h-full rounded-full" style={{ width: `${d.percentage}%`, background: severityColor(d.label) }} />
-                              </div>
-                            </div>
-                          ))}
+                        <div>
+                          <h3 className="text-lg font-bold text-foreground">{r}</h3>
+                          <p className="text-[10px] text-muted-foreground">{dashboardStats?.regional_stats?.[r]?.city_count ?? 0} cities tracked</p>
                         </div>
                       </div>
 
-                      {/* Top Cities in Region */}
-                      <div className="md:col-span-4">
-                        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-4">Top Cities by Damage</h4>
-                        <div className="space-y-4">
-                          {(dashboardStats?.regional_stats?.[r]?.top_cities || []).map((city: any, idx: number) => (
-                            <div key={city.name} className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-black text-muted-foreground/40">#{idx+1}</span>
-                                <div className="w-2 h-2 rounded-full" style={{ background: severityColor(city.severity) }} />
-                                <div>
-                                  <p className="text-xs font-bold text-foreground">{city.name}</p>
-                                  <p className="text-[9px] text-muted-foreground">{r} · {city.severity}</p>
-                                </div>
-                              </div>
-                              <span className="text-xs font-mono font-bold text-orange-400">{fmt(city.cost)}</span>
-                            </div>
-                          ))}
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div className="rounded-lg p-3 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
+                          <p className="text-2xl md:text-3xl font-black text-orange-400">{fmt(dashboardStats?.regional_stats?.[r]?.total_cost ?? 0)}</p>
+                          <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold mt-1">Total Cost</p>
+                        </div>
+                        <div className="rounded-lg p-3 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
+                          <p className="text-2xl md:text-3xl font-black text-violet-400">{dashboardStats?.regional_stats?.[r]?.avg_severity ?? 0} / 4</p>
+                          <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold mt-1">Avg Severity</p>
+                        </div>
+                        <div className="rounded-lg p-3 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
+                          <p className="text-2xl md:text-3xl font-black text-red-400">{dashboardStats?.regional_stats?.[r]?.critical_count ?? 0}</p>
+                          <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold text-red-400/80 mt-1">Critical</p>
+                        </div>
+                        <div className="rounded-lg p-3 bg-black/[0.03] dark:bg-[#111425]/50 border border-black/5 dark:border-white/5">
+                          <p className="text-2xl md:text-3xl font-black text-orange-400">{dashboardStats?.regional_stats?.[r]?.high_count ?? 0}</p>
+                          <p className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold text-orange-400/80 mt-1">High</p>
                         </div>
                       </div>
 
-                      {/* Infrastructure Notes */}
-                      <div className="md:col-span-4">
-                        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-4">Infrastructure Notes</h4>
-                        <div className="space-y-4">
-                          {(dashboardStats?.regional_stats?.[r]?.notes || []).map((note: any) => (
-                            <div key={note.city} className="p-3 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/[0.05] relative overflow-hidden">
-                              <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[8px] font-black uppercase" style={{ background: `${severityColor(note.severity)}22`, color: severityColor(note.severity), border: `1px solid ${severityColor(note.severity)}44` }}>
-                                {note.severity}
-                              </div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <div className="w-1.5 h-1.5 rounded-full" style={{ background: severityColor(note.severity) }} />
-                                <span className="text-[11px] font-bold text-foreground">{note.city}</span>
-                              </div>
-                              <p className="text-[10px] text-muted-foreground leading-relaxed">{note.note}</p>
+                      <div className="space-y-2.5">
+                        {(dashboardStats?.regional_stats?.[r]?.severity_distribution || []).map((d: any) => (
+                          <div key={d.label} className="space-y-1">
+                            <div className="flex justify-between text-[10px] font-bold">
+                              <span className="text-muted-foreground">{d.label}</span>
+                              <span className="text-foreground">{d.percentage}%</span>
                             </div>
-                          ))}
-                        </div>
+                            <div className="h-1.5 w-full bg-black/10 dark:bg-white/5 rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${d.percentage}%`, background: severityColor(d.label) }} />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ) : (
-                    <div className="py-20 text-center text-muted-foreground text-sm">No telemetry for this region yet</div>
-                  )}
-                </TabsContent>
-              ))}
-            </Tabs>
-          </div>
+
+                    {/* Box 2: Top Cities by Damage */}
+                    <div className="rounded-xl p-5 bg-black/[0.02] dark:bg-[#0d1025]/60 border border-black/5 dark:border-white/[0.06]">
+                      <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-5">Top Cities by Damage</h4>
+                      <div className="space-y-4">
+                        {(dashboardStats?.regional_stats?.[r]?.top_cities || []).map((city: any, idx: number) => (
+                          <div key={city.name} className="flex items-center justify-between group">
+                            <div className="flex items-center gap-3">
+                              <span className="text-[10px] font-black text-muted-foreground/40 w-4">#{idx+1}</span>
+                              <div className="w-2 h-2 rounded-full shrink-0" style={{ background: severityColor(city.severity) }} />
+                              <div>
+                                <p className="text-xs font-bold text-foreground group-hover:text-violet-400 transition-colors">{city.name}</p>
+                                <p className="text-[9px] text-muted-foreground">{r} · {city.severity}</p>
+                              </div>
+                            </div>
+                            <span className="text-xs font-mono font-bold text-orange-400">{fmt(city.cost)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Box 3: Infrastructure Notes */}
+                    <div className="rounded-xl p-5 bg-black/[0.02] dark:bg-[#0d1025]/60 border border-black/5 dark:border-white/[0.06]">
+                      <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest mb-5">Infrastructure Notes</h4>
+                      <div className="space-y-3">
+                        {(dashboardStats?.regional_stats?.[r]?.notes || []).map((note: any) => (
+                          <div key={note.city} className="p-3 rounded-lg bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/[0.05] relative overflow-hidden">
+                            <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[8px] font-black uppercase" style={{ background: `${severityColor(note.severity)}22`, color: severityColor(note.severity), border: `1px solid ${severityColor(note.severity)}44` }}>
+                              {note.severity}
+                            </div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: severityColor(note.severity) }} />
+                              <span className="text-[11px] font-bold text-foreground">{note.city}</span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground leading-relaxed">{note.note}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-20 text-center text-muted-foreground text-sm">No telemetry for this region yet</div>
+                )}
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
       </motion.div>
 
