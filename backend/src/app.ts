@@ -41,7 +41,7 @@ app.use("/api", router);
 const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
 app.use(express.static(frontendDistPath));
 
-app.get("*", (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.resolve(frontendDistPath, "index.html"));
 });
 
